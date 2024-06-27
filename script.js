@@ -1,54 +1,72 @@
 const main = document.getElementById("main");
-const adduserbtn = document.getElementById("ad-user");
-const doublebtn = document.getElementById("double");
-const filterbtn = document.getElementById("filter-millionairs");
-const sortbtn = document.getElementById("sort");
-const sumbtn = document.getElementById("sum");
+const addUserBtn = document.getElementById("add-user");
+const doubleBtn = document.getElementById("double");
+const filterBtn = document.getElementById("show-millionairs");
+const sortBtn = document.getElementById("sort");
+const sumBtn = document.getElementById("sum");
 
 let data = [];
 
-async function getrandomuser() {
+async function getRandomUser() {
   const res = await fetch("https://randomuser.me/api/");
   const data = await res.json();
   const user = data.results[0];
-  console.log(user);
-  const newuser = {
-    name: `${user.name.title}${user.name.first} ${user.name.last}`,
-    balance: Math.floor(Math.random() * 100000),
+  const newUser = {
+    name: `${user.name.title} ${user.name.first} ${user.name.last}`,
+    balance: Math.floor(Math.random() * 1000000),
   };
-
-  adddata(newuser);
+  addData(newUser);
 }
-function doublemoney() {
-  data = data.map((user) => {
+
+function doubleMoney() {
+  data = data.map(user => {
     return { ...user, balance: user.balance * 2 };
   });
-  updatedom();
+  updateDOM();
 }
 
-function filterusers(){
-    data.filter()
-}
-function adddata(newuser) {
-  data.push(newuser);
-  updatedom();
+function filterUsers() {
+  data = data.filter(user => user.balance > 1000000);
+  updateDOM();
 }
 
-function formatnumbertodollar(number) {
+function sortByBalance() {
+  data.sort((a, b) => b.balance - a.balance);
+  updateDOM();
+}
+
+function addData(newUser) {
+  data.push(newUser);
+  updateDOM();
+}
+
+function totalBalance() {
+  updateDOM()
+  const balance = data.reduce((acc, user) => (acc += user.balance), 0);
+  const balanceElement = document.createElement('div');
+  balanceElement.innerHTML = `<h3>Total Balance: ${formatNumberToDollar(balance)}</h3>`;
+  main.appendChild(balanceElement);
+  
+}
+
+function formatNumberToDollar(number) {
   return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
 }
-function updatedom(userdata = data) {
-  main.innerHTML = "<h2><strong>user</strong>wealth</h2>";
-  userdata.forEach((user) => {
-    const userdiv = document.createElement("div");
-    userdiv.classList.add("user");
-    userdiv.innerHTML = `<strong>${user.name}</strong>${formatnumbertodollar(
-      user.balance
-    )}`;
-    main.appendChild(userdiv);
+
+function updateDOM(userData = data) {
+  main.innerHTML = "<h2><strong>User</strong> Wealth</h2>";
+  userData.forEach(user => {
+    const userDiv = document.createElement("div");
+    userDiv.classList.add("user");
+    userDiv.innerHTML = `<strong>${user.name}</strong> ${formatNumberToDollar(user.balance)}`;
+    main.appendChild(userDiv);
   });
 }
 
-adduserbtn.addEventListener("click", getrandomuser);
-doublebtn.addEventListener("click", doublemoney);
-filterbtn.addEventListener('click',filterusers)
+// Event Listeners
+addUserBtn.addEventListener("click", getRandomUser);
+doubleBtn.addEventListener("click", doubleMoney);
+filterBtn.addEventListener("click", filterUsers);
+sortBtn.addEventListener("click", sortByBalance);
+sumBtn.addEventListener("click", totalBalance);
+

@@ -55,10 +55,12 @@ h3{
     justify-content: space-between;
     font-weight: bold;
     margin: 20px 0 0;
+    overflow:hidden ;
 }
 .user{
     display: flex;
     justify-content: space-between;
     font-size: 18px;
     margin-bottom: 10px;
+    overflow:hidden;
 }
